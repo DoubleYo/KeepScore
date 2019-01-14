@@ -2,30 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3502636f-3023-4b94-897a-e28f091cdc1a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.babelrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/composerJson.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MainAppBar.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MainDrawer.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MainMoreMenu.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/history.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.ejs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Main.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/PageGameHistory.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/game/actions.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/game/constants.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/game/reducer.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/index.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/main/actions.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/main/constants.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/main/reducer.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/routing.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -98,11 +75,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/reducers/game/reducer.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="450">
               <caret line="30" column="5" lean-forward="true" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -130,6 +116,7 @@
         <option value="$PROJECT_DIR$/src/reducers/game/constants.jsx" />
         <option value="$PROJECT_DIR$/src/reducers/game/actions.jsx" />
         <option value="$PROJECT_DIR$/src/reducers/game/reducer.jsx" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -239,12 +226,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1547471727938</updated>
-      <workItem from="1547471729111" duration="3870000" />
+      <workItem from="1547471729111" duration="4005000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3870000" />
+    <option name="totallyTimeSpent" value="4005000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
@@ -405,6 +392,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="30" column="5" lean-forward="true" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
