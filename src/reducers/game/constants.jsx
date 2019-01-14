@@ -1,0 +1,1 @@
+export const GAME_HISTORY_LOAD = 'GAME_HISTORY_LOAD'
