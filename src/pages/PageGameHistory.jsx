@@ -14,6 +14,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import DeleteIcon from '@material-ui/icons/Delete'
+import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
 
 const styles = theme => ({
     root: {
@@ -44,7 +45,9 @@ class PageGameHistory extends React.PureComponent {
 
     renderNewGameButton() {
         return (
-            <Button variant="contained">New game</Button>
+            <Link to={PAGE_PLAYERS_COUNT}>
+                <Button variant="contained">New game</Button>
+            </Link>
         )
     }
 

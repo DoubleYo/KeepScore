@@ -9,14 +9,19 @@ import {Route, Switch} from 'react-router'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
 import {
-    PAGE_ROOT
+    PAGE_PLAYERS_COUNT, PAGE_PLAYERS_NAME,
+    PAGE_ROOT, PAGE_SETTINGS
 } from '../reducers/routing'
 
 import MainDrawer from '../components/MainDrawer'
 import MainAppBar from '../components/MainAppBar'
 
 import PageGameHistory from './PageGameHistory'
+import PageSettings from './PageSettings'
+import PagePlayersCount from './PagePlayersCount'
 
+import '../styles/main.styl'
+import PagePlayersName from './PagePlayersName'
 
 const styles = theme => ({
     root: {
@@ -38,6 +43,9 @@ class Main extends React.PureComponent {
 
                 <Switch>
                     <Route exact path={PAGE_ROOT} component={PageGameHistory}/>
+                    <Route exact path={PAGE_SETTINGS} component={PageSettings}/>
+                    <Route exact path={PAGE_PLAYERS_COUNT} component={PagePlayersCount}/>
+                    <Route exact path={PAGE_PLAYERS_NAME} component={PagePlayersName}/>
                 </Switch>
             </div>
         )

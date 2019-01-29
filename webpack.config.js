@@ -2,6 +2,8 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 
 const config = {
     entry: {
@@ -24,6 +26,15 @@ const config = {
                 exclude: /node_modules/,
                 loader: ['babel-loader']
             },
+            {
+                test: /\.styl$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+                    'stylus-loader',
+                ],
+            }
         ]
     },
 
@@ -36,11 +47,15 @@ const config = {
             },
             inject: true,
         }),
+        new MiniCssExtractPlugin({
+            filename: '[name].[hash].css',
+            chunkFilename: '[id].[hash].css',
+        }),
     ],
 
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
-        port: 2624
+        port: 5337
     }
 }
 
