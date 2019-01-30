@@ -2,38 +2,28 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
-import {Link} from 'react-router-dom'
 
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
-import DeleteIcon from '@material-ui/icons/Delete'
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        display: 'flex',
     },
-    fab: {
-        position: 'fixed',
-        bottom: theme.spacing.unit * 2,
-        right: theme.spacing.unit * 2,
-    },
-    extendedIcon: {
-        marginRight: theme.spacing.unit,
+    button: {
+        margin: `${theme.spacing.unit * 2}px auto`
     },
 })
 
 class PageGameHistory extends React.PureComponent {
     render() {
+        const {classes} = this.props
         return (
-            <div className={this.props.classes.root}>
+            <div className={classes.root}>
                 {this.renderNewGameButton()}
 
                 <List>
@@ -44,10 +34,12 @@ class PageGameHistory extends React.PureComponent {
     }
 
     renderNewGameButton() {
+        const {classes} = this.props
         return (
-            <Link to={PAGE_PLAYERS_COUNT}>
-                <Button variant="contained">New game</Button>
-            </Link>
+            <Button variant="contained" className={classes.button}
+                    component={Link} to={PAGE_PLAYERS_COUNT}>
+                New game
+            </Button>
         )
     }
 
@@ -59,17 +51,7 @@ class PageGameHistory extends React.PureComponent {
     }
 
     renderGame(game) {
-        return (
-            <ListItem key={object.shape + object.color}>
-                <ListItemText primary={object.shape} secondary={object.color}/>
-
-                <ListItemSecondaryAction>
-                    <IconButton aria-label="Delete" onClick={this.removeObject.bind(this, object)}>
-                        <DeleteIcon/>
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-        )
+        return game.players.map((player) => player.name)
     }
 }
 

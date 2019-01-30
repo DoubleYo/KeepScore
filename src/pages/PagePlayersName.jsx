@@ -12,9 +12,14 @@ import {Button, FormControl, Input, Typography} from '@material-ui/core'
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
     },
     formControl: {
         padding: theme.spacing.unit
+    },
+    button: {
+        margin: `${theme.spacing.unit * 2}px auto`
     },
 })
 
@@ -73,7 +78,7 @@ class PagePlayersName extends React.PureComponent {
             <div className={classes.root}>
                 <Typography variant="h6" align="center">Noms des joueurs (optionnel)</Typography>
                 {this.renderPlayersNameInputs()}
-                <Button variant="contained" color="primary"
+                <Button variant="contained" color="primary" className={classes.button}
                         onClick={this.onClick.bind(this)}>
                     Save
                 </Button>
