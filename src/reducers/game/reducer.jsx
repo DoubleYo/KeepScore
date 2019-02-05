@@ -1,5 +1,9 @@
 import {
-    GAME_HISTORY_LOAD, GAME_PLAYERS_COUNT, GAME_PLAYERS_NAME
+    GAME_HISTORY_LOAD,
+    GAME_PLAYER_HISTORY_ADD,
+    GAME_PLAYER_HISTORY_REMOVE,
+    GAME_PLAYERS_COUNT,
+    GAME_PLAYERS_NAME
 } from './constants'
 
 import {getHash} from '../../utils/strings'
@@ -56,6 +60,27 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                     players: [...action.payload]
                 }
             }
+        }
+        case GAME_PLAYER_HISTORY_ADD: {
+            const newState = {...state}
+            newState.scoreboard.players.forEach((player, index) => {
+                if (player.hash === action.payload.player.hash) {
+                    newState.scoreboard.players[index].history.push({
+                        value: action.payload.delta,
+                        created: Date.now(),
+                    })
+                }
+            })
+            return newState
+        }
+        case GAME_PLAYER_HISTORY_REMOVE: {
+            const newState = {...state}
+            newState.scoreboard.players.forEach((player, index) => {
+                if (player.hash === action.payload.player.hash) {
+                    newState.scoreboard.players[index].history.splice(action.payload.index, 1)
+                }
+            })
+            return newState
         }
     }
     return state
