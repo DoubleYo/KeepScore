@@ -103,9 +103,7 @@ class PlayerScoreboard extends React.Component {
     }
 
     closeDialog() {
-        const state = {open: false}
-        console.log('closeDialog', state)
-        this.setState(state)
+        this.setState({open: false})
     }
 
     historyAddZero() {
@@ -122,7 +120,6 @@ class PlayerScoreboard extends React.Component {
 
     renderHistory() {
         const {classes, player} = this.props
-        const {open} = this.state
         const history = [...player.history].reverse()
 
         return (
@@ -132,24 +129,28 @@ class PlayerScoreboard extends React.Component {
                         <div key={history.created}>{history.value}</div>
                     )
                 })}
-
-                <Dialog onClose={this.closeDialog.bind(this)} open={open}>
-                    <List>
-                        <ListItem button onClick={this.historyAddZero.bind(this)}>
-                            <ListItemText primary="Add zero"/>
-                        </ListItem>
-                        <ListItem button onClick={this.historyRemoveLast.bind(this)}>
-                            <ListItemText primary="Remove last entry"/>
-                        </ListItem>
-                    </List>
-                </Dialog>
-
             </div>
         )
     }
 
+    renderDialog() {
+        const {open} = this.state
+
+        return (
+            <Dialog onClose={this.closeDialog.bind(this)} open={open}>
+                <List>
+                    <ListItem button onClick={this.historyAddZero.bind(this)}>
+                        <ListItemText primary="Add zero"/>
+                    </ListItem>
+                    <ListItem button onClick={this.historyRemoveLast.bind(this)}>
+                        <ListItemText primary="Remove last entry"/>
+                    </ListItem>
+                </List>
+            </Dialog>
+        )
+    }
+
     render() {
-        console.log('PlayerScoreboard render')
         const {classes, player} = this.props
 
         return (
@@ -167,6 +168,7 @@ class PlayerScoreboard extends React.Component {
                     </div>
                 </div>
                 {this.renderHistory()}
+                {this.renderDialog()}
             </Paper>
         )
     }
