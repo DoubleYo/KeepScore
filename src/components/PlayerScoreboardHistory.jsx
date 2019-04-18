@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
@@ -19,7 +19,7 @@ const styles = theme => ({
     }
 })
 
-class PlayerScoreboardHistory extends React.Component {
+class PlayerScoreboardHistory extends Component {
 
     constructor() {
         super()
@@ -34,7 +34,6 @@ class PlayerScoreboardHistory extends React.Component {
     }
 
     closeDialog() {
-        console.log('closeDialog')
         this.setState({open: false})
     }
 
@@ -51,17 +50,20 @@ class PlayerScoreboardHistory extends React.Component {
     }
 
     render() {
-        console.log('PlayerScoreboardHistory render')
         const {classes, player} = this.props
         const {open} = this.state
 
+        const history = [...player.history].reverse()
+
         return (
-            <div className={classes.history} onClick={this.openDialog.bind(this)}>
-                {player.history.map((history) => {
-                    return (
-                        <div key={history.created}>{history.value}</div>
-                    )
-                })}
+            <Fragment>
+                <div className={classes.history} onClick={this.openDialog.bind(this)}>
+                    {history.map((history) => {
+                        return (
+                            <div key={history.created}>{history.value}</div>
+                        )
+                    })}
+                </div>
 
                 <Dialog onClose={this.closeDialog.bind(this)} open={open}>
                     <List>
@@ -73,8 +75,7 @@ class PlayerScoreboardHistory extends React.Component {
                         </ListItem>
                     </List>
                 </Dialog>
-
-            </div>
+            </Fragment>
         )
     }
 }

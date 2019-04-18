@@ -7,7 +7,7 @@ import {PersistGate} from 'redux-persist/es/integration/react'
 import storage from 'redux-persist/es/storage'
 
 import {composeWithDevTools} from 'redux-devtools-extension'
-import {ConnectedRouter, routerMiddleware, routerReducer} from 'react-router-redux'
+import {ConnectedRouter, connectRouter, routerMiddleware} from 'connected-react-router'
 import thunk from 'redux-thunk'
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
@@ -20,7 +20,7 @@ const composeEnhancers = composeWithDevTools({})
 const store = createStore(
     persistCombineReducers({key: 'keepscore', storage}, {
         ...reducers,
-        router: routerReducer
+        router: connectRouter(history)
     }),
     composeEnhancers(
         applyMiddleware(middleware, thunk)

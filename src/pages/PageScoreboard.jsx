@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
@@ -16,11 +16,15 @@ const styles = theme => ({
     },
 })
 
-class PageScoreboard extends React.PureComponent {
+class PageScoreboard extends Component {
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        console.log('shouldComponentUpdate')
+        return true
+    }
 
     renderPlayersScore() {
-        const {classes} = this.props
-        const {players} = this.props
+        const {classes, players} = this.props
 
         return players.map(player => {
             return (

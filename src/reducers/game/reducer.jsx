@@ -65,10 +65,12 @@ export default function gameReducer(state = INITIAL_STATE, action) {
             const newState = {...state}
             newState.scoreboard.players.forEach((player, index) => {
                 if (player.hash === action.payload.player.hash) {
-                    newState.scoreboard.players[index].history.push({
+                    const history = [...player.history]
+                    history.push({
                         value: action.payload.delta,
                         created: Date.now(),
                     })
+                    newState.scoreboard.players[index].history = [...history]
                 }
             })
             return newState
@@ -77,7 +79,9 @@ export default function gameReducer(state = INITIAL_STATE, action) {
             const newState = {...state}
             newState.scoreboard.players.forEach((player, index) => {
                 if (player.hash === action.payload.player.hash) {
-                    newState.scoreboard.players[index].history.splice(action.payload.index, 1)
+                    const history = [...player.history]
+                    history.splice(action.payload.index, 1)
+                    newState.scoreboard.players[index].history = [...history]
                 }
             })
             return newState

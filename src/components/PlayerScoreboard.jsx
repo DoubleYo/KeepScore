@@ -1,20 +1,12 @@
-import React from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
-import {
-    Badge,
-    Button,
-    Dialog,
-    List,
-    ListItem,
-    ListItemText,
-    Paper,
-    Typography
-} from '@material-ui/core'
-import {playerHistoryAdd, playerHistoryRemove} from '../reducers/game/actions'
+import {Badge, Button, Paper, Typography} from '@material-ui/core'
+import {playerHistoryAdd} from '../reducers/game/actions'
+import PlayerScoreboardHistory from './PlayerScoreboardHistory'
 
 const styles = theme => ({
     paper: {
@@ -24,21 +16,20 @@ const styles = theme => ({
     content: {
         flex: 1
     },
-    contentName: {
+    name: {
         textAlign: 'center',
     },
-    contentScore: {
+    scoreContainer: {
         display: 'flex',
         alignItems: 'center',
     },
-    history: {
-        margin: theme.spacing.unit,
-        flexBasis: '40px',
-        borderLeft: `solid thin ${theme.palette.divider}`
+    score: {
+        flex: 1,
+        textAlign: 'center'
     },
 })
 
-class PlayerScoreboard extends React.Component {
+class PlayerScoreboard extends Component {
 
     constructor() {
         super()
@@ -73,7 +64,7 @@ class PlayerScoreboard extends React.Component {
     }
 
     renderScoreAndBadge() {
-        const {player} = this.props
+        const {classes, player} = this.props
         const {delta} = this.state
 
         let score = 0
@@ -85,7 +76,7 @@ class PlayerScoreboard extends React.Component {
         if (delta !== 0) {
             const badgeColor = (delta > 0) ? 'primary' : 'error'
             return (
-                <Badge color={badgeColor} badgeContent={delta}>
+                <Badge color={badgeColor} badgeContent={delta} className={classes.score}>
                     {this.renderScore(score)}
                 </Badge>
             )
@@ -95,71 +86,25 @@ class PlayerScoreboard extends React.Component {
     }
 
     renderScore(score) {
-        return <Typography variant="h2">{score}</Typography>
-    }
-
-    openDialog() {
-        this.setState({open: true})
-    }
-
-    closeDialog() {
-        this.setState({open: false})
-    }
-
-    historyAddZero() {
-        const {playerHistoryAdd} = this.props
-        playerHistoryAdd(0)
-        this.closeDialog()
-    }
-
-    historyRemoveLast() {
-        const {playerHistoryRemove} = this.props
-        playerHistoryRemove(-1)
-        this.closeDialog()
-    }
-
-    renderHistory() {
-        const {classes, player} = this.props
-        const history = [...player.history].reverse()
-
+        const {classes} = this.props
         return (
-            <div className={classes.history} onClick={this.openDialog.bind(this)}>
-                {history.map((history) => {
-                    return (
-                        <div key={history.created}>{history.value}</div>
-                    )
-                })}
-            </div>
-        )
-    }
-
-    renderDialog() {
-        const {open} = this.state
-
-        return (
-            <Dialog onClose={this.closeDialog.bind(this)} open={open}>
-                <List>
-                    <ListItem button onClick={this.historyAddZero.bind(this)}>
-                        <ListItemText primary="Add zero"/>
-                    </ListItem>
-                    <ListItem button onClick={this.historyRemoveLast.bind(this)}>
-                        <ListItemText primary="Remove last entry"/>
-                    </ListItem>
-                </List>
-            </Dialog>
+            <Typography variant="h2" className={classes.score}>
+                {score}
+            </Typography>
         )
     }
 
     render() {
         const {classes, player} = this.props
+        const historyKey = [player.hash, player.history.length].join('-')
 
         return (
             <Paper key={player.hash} className={classes.paper}>
                 <div className={classes.content}>
-                    <div className={classes.contentName}>
+                    <div className={classes.name}>
                         <Typography>{player.name}</Typography>
                     </div>
-                    <div className={classes.contentScore}>
+                    <div className={classes.scoreContainer}>
                         <Button variant="contained"
                                 onClick={this.changeScore.bind(this, -1, 1)}>-</Button>
                         {this.renderScoreAndBadge()}
@@ -167,8 +112,7 @@ class PlayerScoreboard extends React.Component {
                                 onClick={this.changeScore.bind(this, +1, 1)}>+</Button>
                     </div>
                 </div>
-                {this.renderHistory()}
-                {this.renderDialog()}
+                <PlayerScoreboardHistory key={historyKey} player={player}/>
             </Paper>
         )
     }
@@ -178,7 +122,6 @@ PlayerScoreboard.propTypes = {
     classes: PropTypes.object,
     player: PropTypes.object.isRequired,
     playerHistoryAdd: PropTypes.func,
-    playerHistoryRemove: PropTypes.func,
 }
 
 function mapStateToProps(state) {
@@ -188,7 +131,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
     return {
         playerHistoryAdd: (delta) => dispatch(playerHistoryAdd(ownProps.player, delta)),
-        playerHistoryRemove: (index) => dispatch(playerHistoryRemove(ownProps.player, index)),
     }
 }
 
