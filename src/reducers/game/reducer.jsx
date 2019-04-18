@@ -1,5 +1,6 @@
 import {
     GAME_HISTORY_LOAD,
+    GAME_HISTORY_SAVE,
     GAME_PLAYER_HISTORY_ADD,
     GAME_PLAYER_HISTORY_REMOVE,
     GAME_PLAYERS_COUNT,
@@ -26,13 +27,24 @@ const PLAYER_STATE = {
 export default function gameReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case GAME_HISTORY_LOAD: {
-            const games = state.history.filter((game) => game.hash === action.payload)
-            const scoreboard = (games.length > 0)
-                ? games[0]
-                : INITIAL_STATE.scoreboard
+            const game = state.history.find((game) => game.hash === action.payload)
+            const scoreboard = game || INITIAL_STATE.scoreboard
             return {
                 ...state,
                 scoreboard
+            }
+        }
+        case GAME_HISTORY_SAVE: {
+            const gameIndex = state.history.findIndex((game) => game.hash === state.scoreboard.hash)
+            const history = [...state.history]
+            if (gameIndex !== undefined) {
+                history.splice(gameIndex, 1, state.scoreboard)
+            } else {
+                history.push(state.scoreboard)
+            }
+            return {
+                ...state,
+                history
             }
         }
         case GAME_PLAYERS_COUNT: {

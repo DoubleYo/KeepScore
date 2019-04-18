@@ -5,14 +5,16 @@ import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
-import List from '@material-ui/core/List'
-import Button from '@material-ui/core/Button'
+import {Avatar, Button, List, ListItem, ListItemText} from '@material-ui/core'
+
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
+import {gameHistoryLoad} from '../reducers/game/actions'
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
         display: 'flex',
+        flexDirection: 'column',
     },
     button: {
         margin: `${theme.spacing.unit * 2}px auto`
@@ -44,28 +46,38 @@ class PageGameHistory extends React.PureComponent {
     }
 
     renderGameHistory() {
-        return null
-        return this.props.gameHistory.map(game => {
+        return this.props.history.map(game => {
             return this.renderGame(game)
         })
     }
 
     renderGame(game) {
-        return game.players.map((player) => player.name)
+        const {gameHistoryLoad} = this.props
+        return (
+            <ListItem key={game.hash} onClick={gameHistoryLoad.bind(this, game.hash)}>
+                <Avatar>{game.players.length}</Avatar>
+                <ListItemText primary={game.players.map((player) => player.name).join(', ')} />
+            </ListItem>
+        )
     }
 }
 
 PageGameHistory.propTypes = {
     classes: PropTypes.object,
-    gameHistory: PropTypes.array,
+    history: PropTypes.array,
+    gameHistoryLoad: PropTypes.func,
 }
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        history: state.game.history
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-    return {}
+    return {
+        gameHistoryLoad: (hash) => dispatch(gameHistoryLoad(hash)),
+    }
 }
 
 export default compose(
