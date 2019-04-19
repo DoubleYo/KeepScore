@@ -7,28 +7,24 @@ import {withStyles} from '@material-ui/core/styles'
 
 import Grid from '@material-ui/core/Grid'
 
-import PlayerScoreboard from '../components/PlayerScoreboard'
+import PlayerScoreboard from '../components/PlayerScoreboard/PlayerScoreboard'
+import {getPlayerKey} from '../utils/player'
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing.unit,
     },
 })
 
 class PageScoreboard extends Component {
-
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log('shouldComponentUpdate')
-        return true
-    }
 
     renderPlayersScore() {
         const {classes, players} = this.props
 
         return players.map(player => {
             return (
-                <Grid item xs={6} key={player.hash}>
+                <Grid item xs={6} key={getPlayerKey(player)}>
                     <PlayerScoreboard player={player}/>
                 </Grid>
             )
@@ -38,7 +34,7 @@ class PageScoreboard extends Component {
     render() {
         const {classes} = this.props
         return (
-            <Grid container className={classes.root} spacing={16}>
+            <Grid container className={classes.root} spacing={8}>
                 {this.renderPlayersScore()}
             </Grid>
         )
@@ -48,11 +44,13 @@ class PageScoreboard extends Component {
 PageScoreboard.propTypes = {
     classes: PropTypes.object,
     players: PropTypes.array,
+    updated: PropTypes.number,
 }
 
 function mapStateToProps(state) {
     return {
-        players: state.game.scoreboard.players
+        players: state.game.scoreboard.players,
+        updated: state.game.scoreboard.updated,
     }
 }
 

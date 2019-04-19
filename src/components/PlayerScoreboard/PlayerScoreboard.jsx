@@ -3,10 +3,15 @@ import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {withStyles} from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles/index'
+import {withTranslation} from 'react-i18next'
 import {Badge, Button, Paper, Typography} from '@material-ui/core'
-import {playerHistoryAdd} from '../reducers/game/actions'
+import ClickNHold from 'react-click-n-hold'
+
+import {playerHistoryAdd} from '../../reducers/game/actions'
 import PlayerScoreboardHistory from './PlayerScoreboardHistory'
+import ScoreInputDialog from './ScoreInputDialog'
+import {getPlayerKey} from '../../utils/player'
 
 const styles = theme => ({
     paper: {
@@ -36,7 +41,8 @@ class PlayerScoreboard extends Component {
 
         this.state = {
             delta: 0,
-            open: false,
+            nagativeModalOpen: false,
+            positiveModalOpen: false,
         }
 
         this.saveTimeout = 2000
@@ -58,9 +64,27 @@ class PlayerScoreboard extends Component {
     saveDelta() {
         const {playerHistoryAdd} = this.props
         const {delta} = this.state
+        if (delta !== 0) {
+            playerHistoryAdd(delta)
+            this.setState({delta: 0})
+        }
+    }
 
-        playerHistoryAdd(delta)
-        this.setState({delta: 0})
+    handleButtonPress(multiplier, event, enough) {
+        if (!enough) {
+            this.changeScore(multiplier, 1)
+        }
+    }
+
+    handleButtonLongPress(multiplier, event) {
+        const newState = (multiplier > 0) ? {positiveModalOpen: true} : {nagativeModalOpen: true}
+        this.setState(newState)
+    }
+
+    handleDialogClose(multiplier, delta) {
+        this.changeScore(multiplier, delta)
+        const newState = (multiplier > 0) ? {positiveModalOpen: false} : {nagativeModalOpen: false}
+        this.setState(newState)
     }
 
     renderScoreAndBadge() {
@@ -95,24 +119,35 @@ class PlayerScoreboard extends Component {
     }
 
     render() {
-        const {classes, player} = this.props
-        const historyKey = [player.hash, player.history.length].join('-')
+        const {classes, t, player} = this.props
+        const {nagativeModalOpen, positiveModalOpen} = this.state
 
         return (
-            <Paper key={player.hash} className={classes.paper}>
+            <Paper className={classes.paper}>
                 <div className={classes.content}>
                     <div className={classes.name}>
                         <Typography>{player.name}</Typography>
                     </div>
                     <div className={classes.scoreContainer}>
-                        <Button variant="contained"
-                                onClick={this.changeScore.bind(this, -1, 1)}>-</Button>
+
+                        <ClickNHold time={1} onClickNHold={this.handleButtonLongPress.bind(this, -1)}
+                                    onEnd={this.handleButtonPress.bind(this, -1)}>
+                            <Button variant="contained">-</Button>
+                        </ClickNHold>
+                        <ScoreInputDialog open={nagativeModalOpen} title={t('scoreboard.dialog.title.subtract')}
+                                          onClose={this.handleDialogClose.bind(this, -1)}/>
+
                         {this.renderScoreAndBadge()}
-                        <Button variant="contained"
-                                onClick={this.changeScore.bind(this, +1, 1)}>+</Button>
+
+                        <ClickNHold time={1} onClickNHold={this.handleButtonLongPress.bind(this, +1)}
+                                    onEnd={this.handleButtonPress.bind(this, +1)}>
+                            <Button variant="contained">+</Button>
+                        </ClickNHold>
+                        <ScoreInputDialog open={positiveModalOpen} title={t('scoreboard.dialog.title.add')}
+                                          onClose={this.handleDialogClose.bind(this, +1)}/>
                     </div>
                 </div>
-                <PlayerScoreboardHistory key={historyKey} player={player}/>
+                <PlayerScoreboardHistory key={getPlayerKey(player)} player={player}/>
             </Paper>
         )
     }
@@ -120,6 +155,7 @@ class PlayerScoreboard extends Component {
 
 PlayerScoreboard.propTypes = {
     classes: PropTypes.object,
+    t: PropTypes.func,
     player: PropTypes.object.isRequired,
     playerHistoryAdd: PropTypes.func,
 }
@@ -137,5 +173,6 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default compose(
     withRouter,
     withStyles(styles),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(PlayerScoreboard)

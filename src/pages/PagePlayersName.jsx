@@ -8,6 +8,7 @@ import {withStyles} from '@material-ui/core/styles'
 import {setPlayersName} from '../reducers/game/actions'
 
 import {Button, FormControl, Input, Typography} from '@material-ui/core'
+import {Trans, withTranslation} from 'react-i18next'
 
 const styles = theme => ({
     root: {
@@ -29,14 +30,14 @@ class PagePlayersName extends React.PureComponent {
         super(props)
 
         const players = props.players.map((player, index) => {
-            const name = `Joueur ${index + 1}`
+            const name = props.t('game.player.placeholder', {number: (index + 1)})
             return {...player, name, placeholder: name}
         })
 
         this.state = {players}
     }
 
-    onChange(event) {
+    handleChange(event) {
         const {players} = this.state
         players.forEach((player, index) => {
             if (player.hash === event.target.name) {
@@ -46,7 +47,7 @@ class PagePlayersName extends React.PureComponent {
         this.setState({players: [...players]})
     }
 
-    onClick() {
+    handleClick() {
         const {setPlayersName} = this.props
         const {players} = this.state
 
@@ -66,7 +67,7 @@ class PagePlayersName extends React.PureComponent {
             return (
                 <FormControl key={player.hash} fullWidth className={classes.formControl}>
                     <Input name={player.hash} placeholder={player.placeholder} value={value}
-                           onChange={this.onChange.bind(this)}/>
+                           onChange={this.handleChange.bind(this)}/>
                 </FormControl>
             )
         })
@@ -79,8 +80,8 @@ class PagePlayersName extends React.PureComponent {
                 <Typography variant="h6" align="center">Noms des joueurs (optionnel)</Typography>
                 {this.renderPlayersNameInputs()}
                 <Button variant="contained" color="primary" className={classes.button}
-                        onClick={this.onClick.bind(this)}>
-                    Save
+                        onClick={this.handleClick.bind(this)}>
+                    <Trans i18nKey={'game.action.save'}/>
                 </Button>
             </div>
         )
@@ -89,6 +90,7 @@ class PagePlayersName extends React.PureComponent {
 
 PagePlayersName.propTypes = {
     classes: PropTypes.object,
+    t: PropTypes.func,
     players: PropTypes.array,
     setPlayersName: PropTypes.func,
 }
@@ -108,5 +110,6 @@ function mapDispatchToProps(dispatch) {
 export default compose(
     withRouter,
     withStyles(styles),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(PagePlayersName)

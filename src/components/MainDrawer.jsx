@@ -20,6 +20,25 @@ import history from '../history'
 const styles = theme => ({})
 
 class MainDrawer extends React.PureComponent {
+
+    handleDrawerItemClick(path) {
+        this.props.closeDrawer()
+        history.push(path)
+    }
+
+    renderDrawerList() {
+        return (
+            <List>
+                <ListItem button onClick={this.handleDrawerItemClick.bind(this, PAGE_SETTINGS)}>
+                    <ListItemIcon>
+                        <AccessAlarmIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Réglages"/>
+                </ListItem>
+            </List>
+        )
+    }
+
     render() {
         return (
             <Drawer open={this.props.drawer} onClose={this.props.closeDrawer.bind(this)}>
@@ -35,23 +54,6 @@ class MainDrawer extends React.PureComponent {
                 </div>
             </Drawer>
         )
-    }
-
-    renderDrawerList() {
-        return (
-            <List>
-                <ListItem button onClick={this.onDrawerItemClick.bind(this, PAGE_SETTINGS)}>
-                    <ListItemIcon>
-                        <AccessAlarmIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Réglages"/>
-                </ListItem>
-            </List>
-        )
-    }
-    onDrawerItemClick(path) {
-        this.props.closeDrawer()
-        history.push(path)
     }
 }
 

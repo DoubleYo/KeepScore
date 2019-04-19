@@ -1,5 +1,5 @@
 import {
-    GAME_HISTORY_LOAD,
+    GAME_HISTORY_LOAD, GAME_HISTORY_REMOVE,
     GAME_HISTORY_SAVE,
     GAME_PLAYER_HISTORY_ADD,
     GAME_PLAYER_HISTORY_REMOVE,
@@ -35,16 +35,33 @@ export default function gameReducer(state = INITIAL_STATE, action) {
             }
         }
         case GAME_HISTORY_SAVE: {
-            const gameIndex = state.history.findIndex((game) => game.hash === state.scoreboard.hash)
+            const scoreboard = {...state.scoreboard}
+            scoreboard.updated = Date.now()
+
             const history = [...state.history]
-            if (gameIndex !== undefined) {
-                history.splice(gameIndex, 1, state.scoreboard)
+            const gameIndex = history.findIndex((game) => game.hash === state.scoreboard.hash)
+            if (gameIndex !== -1) {
+                history.splice(gameIndex, 1, scoreboard)
             } else {
-                history.push(state.scoreboard)
+                history.push(scoreboard)
             }
             return {
                 ...state,
-                history
+                scoreboard,
+                history,
+            }
+        }
+        case GAME_HISTORY_REMOVE: {
+            const history = [...state.history]
+            action.payload.forEach((hash) => {
+                const gameIndex = history.findIndex((game) => game.hash === hash)
+                if (gameIndex !== -1) {
+                    history.splice(gameIndex, 1)
+                }
+            })
+            return {
+                ...state,
+                history,
             }
         }
         case GAME_PLAYERS_COUNT: {
@@ -69,7 +86,7 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                 ...state,
                 scoreboard: {
                     ...state.scoreboard,
-                    players: [...action.payload]
+                    players: [...action.payload],
                 }
             }
         }

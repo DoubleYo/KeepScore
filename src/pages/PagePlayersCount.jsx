@@ -37,6 +37,16 @@ const styles = theme => ({
 })
 
 class PagePlayersCount extends React.PureComponent {
+
+
+    handleClick(count) {
+        this.props.setPlayersCount(count)
+    }
+
+    handleChange(event) {
+        this.props.setPlayersCount(event.target.value)
+    }
+
     render() {
         const {classes} = this.props
         return (
@@ -45,7 +55,7 @@ class PagePlayersCount extends React.PureComponent {
                     {range(2, 11).map(count => {
                         return (
                             <Button key={count} variant="contained"
-                                    onClick={this.onClick.bind(this, count)}
+                                    onClick={this.handleClick.bind(this, count)}
                                     className={classes.button}>{count}</Button>
                         )
                     })}
@@ -55,8 +65,8 @@ class PagePlayersCount extends React.PureComponent {
                     <InputLabel>Plus</InputLabel>
                     <Select
                         value=""
-                        onChange={this.onChange.bind(this)}
-                        input={<FilledInput />}
+                        onChange={this.handleChange.bind(this)}
+                        input={<FilledInput/>}
                     >
                         <MenuItem value="" disabled>
                             <em>Plus</em>
@@ -70,14 +80,6 @@ class PagePlayersCount extends React.PureComponent {
                 </FormControl>
             </div>
         )
-    }
-
-    onClick(count) {
-        this.props.setPlayersCount(count)
-    }
-
-    onChange(event) {
-        this.props.setPlayersCount(event.target.value)
     }
 }
 

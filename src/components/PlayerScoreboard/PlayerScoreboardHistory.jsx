@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {withStyles} from '@material-ui/core/styles'
-import {playerHistoryAdd, playerHistoryRemove} from '../reducers/game/actions'
+import {withStyles} from '@material-ui/core/styles/index'
+import {withTranslation} from 'react-i18next'
+import {playerHistoryAdd, playerHistoryRemove} from '../../reducers/game/actions'
 import {Dialog, List, ListItem, ListItemText} from '@material-ui/core'
 
 const styles = theme => ({
@@ -29,35 +30,35 @@ class PlayerScoreboardHistory extends Component {
         }
     }
 
-    openDialog() {
+    handleOpenDialog() {
         this.setState({open: true})
     }
 
-    closeDialog() {
+    handleCloseDialog() {
         this.setState({open: false})
     }
 
-    historyAddZero() {
+    handleHistoryAddZero() {
         const {playerHistoryAdd} = this.props
         playerHistoryAdd(0)
-        this.closeDialog()
+        this.handleCloseDialog()
     }
 
-    historyRemoveLast() {
+    handleHistoryRemoveLast() {
         const {playerHistoryRemove} = this.props
         playerHistoryRemove(-1)
-        this.closeDialog()
+        this.handleCloseDialog()
     }
 
     render() {
-        const {classes, player} = this.props
+        const {classes, t, player} = this.props
         const {open} = this.state
 
         const history = [...player.history].reverse()
 
         return (
             <Fragment>
-                <div className={classes.history} onClick={this.openDialog.bind(this)}>
+                <div className={classes.history} onClick={this.handleOpenDialog.bind(this)}>
                     {history.map((history) => {
                         return (
                             <div key={history.created}>{history.value}</div>
@@ -65,13 +66,13 @@ class PlayerScoreboardHistory extends Component {
                     })}
                 </div>
 
-                <Dialog onClose={this.closeDialog.bind(this)} open={open}>
+                <Dialog onClose={this.handleCloseDialog.bind(this)} open={open}>
                     <List>
-                        <ListItem button onClick={this.historyAddZero.bind(this)}>
-                            <ListItemText primary="Add zero"/>
+                        <ListItem button onClick={this.handleHistoryAddZero.bind(this)}>
+                            <ListItemText primary={t('scoreboard.history.action.addZero')}/>
                         </ListItem>
-                        <ListItem button onClick={this.historyRemoveLast.bind(this)}>
-                            <ListItemText primary="Remove last entry"/>
+                        <ListItem button onClick={this.handleHistoryRemoveLast.bind(this)}>
+                            <ListItemText primary={t('scoreboard.history.action.removeLast')}/>
                         </ListItem>
                     </List>
                 </Dialog>
@@ -82,6 +83,7 @@ class PlayerScoreboardHistory extends Component {
 
 PlayerScoreboardHistory.propTypes = {
     classes: PropTypes.object,
+    t: PropTypes.func,
     player: PropTypes.object.isRequired,
     playerHistoryAdd: PropTypes.func,
     playerHistoryRemove: PropTypes.func,
@@ -101,5 +103,6 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default compose(
     withRouter,
     withStyles(styles),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(PlayerScoreboardHistory)

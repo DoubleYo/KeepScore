@@ -24,6 +24,15 @@ class MainMoreMenu extends React.PureComponent {
         }
     }
 
+
+    handleMoreMenuButtonClick(event) {
+        this.setState({moreMenuAnchor: event.currentTarget})
+    }
+
+    handleCloseMoreMenu() {
+        this.setState({moreMenuAnchor: null})
+    }
+
     render() {
         const menu = []
 
@@ -43,7 +52,7 @@ class MainMoreMenu extends React.PureComponent {
                 <IconButton color="inherit"
                             aria-owns={this.state.moreMenuAnchor ? 'simple-menu' : null}
                             aria-haspopup="true"
-                            onClick={this.onMoreMenuButtonClick.bind(this)}>
+                            onClick={this.handleMoreMenuButtonClick.bind(this)}>
                     <MoreVertIcon/>
                 </IconButton>
 
@@ -51,7 +60,7 @@ class MainMoreMenu extends React.PureComponent {
                     id="simple-menu"
                     anchorEl={this.state.moreMenuAnchor}
                     open={Boolean(this.state.moreMenuAnchor)}
-                    onClose={this.closeMoreMenu.bind(this)}>
+                    onClose={this.handleCloseMoreMenu.bind(this)}>
 
                     {menu.map((item) => {
                         return (
@@ -62,14 +71,6 @@ class MainMoreMenu extends React.PureComponent {
             </div>
 
         )
-    }
-
-    onMoreMenuButtonClick(event) {
-        this.setState({moreMenuAnchor: event.currentTarget})
-    }
-
-    closeMoreMenu() {
-        this.setState({moreMenuAnchor: null})
     }
 }
 

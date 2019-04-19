@@ -14,6 +14,7 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 
 import reducers from './reducers'
 import history from './history'
+import './translations'
 
 const middleware = routerMiddleware(history)
 const composeEnhancers = composeWithDevTools({})

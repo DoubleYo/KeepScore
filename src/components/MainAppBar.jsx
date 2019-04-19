@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
-import {HISTORY_BACK, PAGE_TITLES, PREVIOUS_PAGE} from '../reducers/routing'
+import {
+    HISTORY_BACK, PAGE_PLAYERS_COUNT, PAGE_PLAYERS_NAME,
+    PAGE_ROOT, PAGE_SCOREBOARD,
+    PAGE_SETTINGS,
+    PAGE_TITLES,
+    PREVIOUS_PAGE
+} from '../reducers/routing'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -19,6 +25,7 @@ import MainMoreMenu from './MainMoreMenu'
 import {toggleDrawer} from '../reducers/main/actions'
 
 import history from '../history'
+import {withTranslation} from 'react-i18next'
 
 const styles = theme => ({
     flex: {
@@ -30,31 +37,25 @@ const styles = theme => ({
     },
 })
 
-class MainAppBar extends React.PureComponent {
+class MainAppBar extends PureComponent {
 
-    render() {
-        return (
-            <AppBar position="static">
-                <Toolbar>
-                    {this.renderMenuIcon()}
-                    <Typography variant="h6" color="inherit"
-                                className={this.props.classes.flex}>
-                        {PAGE_TITLES[this.props.pathname]}
-                    </Typography>
 
-                    <MainMoreMenu/>
-                </Toolbar>
-            </AppBar>
-        )
+    handleArrowBackClick(previousPage) {
+        if (previousPage === HISTORY_BACK) {
+            history.goBack()
+        } else {
+            history.push(previousPage)
+        }
     }
 
     renderMenuIcon() {
-        const previousPage = PREVIOUS_PAGE[this.props.pathname]
+        const {classes, pathname, openDrawer} = this.props
+        const previousPage = PREVIOUS_PAGE[pathname]
         if (null === previousPage) {
             return (
                 <IconButton color="inherit" aria-label="Menu"
-                            className={this.props.classes.menuButton}
-                            onClick={this.props.openDrawer.bind(this)}>
+                            className={classes.menuButton}
+                            onClick={openDrawer.bind(this)}>
                     <MenuIcon/>
                 </IconButton>
             )
@@ -62,24 +63,47 @@ class MainAppBar extends React.PureComponent {
 
         return (
             <IconButton color="inherit" aria-label="Back"
-                        className={this.props.classes.menuButton}
-                        onClick={this.onArrowBackClick.bind(this, previousPage)}>
+                        className={classes.menuButton}
+                        onClick={this.handleArrowBackClick.bind(this, previousPage)}>
                 <ArrowBackIcon/>
             </IconButton>
         )
     }
 
-    onArrowBackClick(previousPage) {
-        if (previousPage === HISTORY_BACK) {
-            history.goBack()
-        } else {
-            history.push(previousPage)
+    renderPageTitle() {
+        const {t, pathname} = this.props
+        const pageTitles = {
+            [PAGE_ROOT]: t('title.root'),
+            [PAGE_SETTINGS]: t('title.settings'),
+            [PAGE_PLAYERS_COUNT]: t('title.playersCount'),
+            [PAGE_PLAYERS_NAME]: t('title.playersName'),
+            [PAGE_SCOREBOARD]: t('title.scoreboard'),
         }
+        if (pageTitles.hasOwnProperty(pathname)) {
+            return pageTitles[pathname]
+        }
+        return pageTitles[PAGE_ROOT]
+    }
+
+    render() {
+        const {classes} = this.props
+        return (
+            <AppBar position="static">
+                <Toolbar>
+                    {this.renderMenuIcon()}
+                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                        {this.renderPageTitle()}
+                    </Typography>
+                    <MainMoreMenu/>
+                </Toolbar>
+            </AppBar>
+        )
     }
 }
 
 MainAppBar.propTypes = {
     classes: PropTypes.object,
+    t: PropTypes.func,
     pathname: PropTypes.string,
     objectsCount: PropTypes.number,
     openDrawer: PropTypes.func,
@@ -100,5 +124,6 @@ function mapDispatchToProps(dispatch) {
 export default compose(
     withRouter,
     withStyles(styles),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(MainAppBar)

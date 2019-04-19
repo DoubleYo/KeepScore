@@ -1,18 +1,28 @@
 import history from '../../history'
 import {
-    GAME_HISTORY_LOAD,
+    GAME_HISTORY_LOAD, GAME_HISTORY_REMOVE,
     GAME_HISTORY_SAVE,
     GAME_PLAYER_HISTORY_ADD,
     GAME_PLAYER_HISTORY_REMOVE,
     GAME_PLAYERS_COUNT,
     GAME_PLAYERS_NAME
 } from './constants'
-import {PAGE_PLAYERS_NAME, PAGE_SCOREBOARD} from '../routing'
+import {PAGE_PLAYERS_NAME, PAGE_ROOT, PAGE_SCOREBOARD} from '../routing'
 
 export function gameHistoryLoad(hash) {
     return function (dispatch) {
         dispatch({type: GAME_HISTORY_LOAD, payload: hash})
         history.push(PAGE_SCOREBOARD)
+    }
+}
+
+export function gameHistoryRemove(hashes) {
+    return function (dispatch) {
+        if (typeof hashes === 'string') {
+            hashes = [hashes]
+        }
+        dispatch({type: GAME_HISTORY_REMOVE, payload: hashes})
+        history.push(PAGE_ROOT)
     }
 }
 
