@@ -32,6 +32,7 @@ module.exports = {
     history: {
         action: {
             remove: 'Supprimer',
+            newGame: 'Nouvelle partie',
         },
     },
 }

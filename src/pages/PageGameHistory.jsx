@@ -1,16 +1,26 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
-import ClickNHold from 'react-click-n-hold'
 
 import {Trans, withTranslation} from 'react-i18next'
-import {Avatar, Button, Dialog, List, ListItem, ListItemText} from '@material-ui/core'
+import {
+    Avatar,
+    Button,
+    Checkbox,
+    Dialog,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemSecondaryAction,
+    ListItemText
+} from '@material-ui/core'
 
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
 import {gameHistoryLoad, gameHistoryRemove} from '../reducers/game/actions'
+import LongPress from '../components/LongPress/LongPress'
 
 const styles = theme => ({
     root: {
@@ -23,19 +33,18 @@ const styles = theme => ({
     },
 })
 
-class PageGameHistory extends React.PureComponent {
+class PageGameHistory extends PureComponent {
     constructor() {
         super()
 
         this.state = {
             open: false,
+            checked: [],
         }
     }
 
-    handleItemPress(hash, event, enough) {
-        if (!enough) {
-            this.props.gameHistoryLoad(hash)
-        }
+    handleItemPress(hash) {
+        this.props.gameHistoryLoad(hash)
     }
 
     handleItemLongPress(hash) {
@@ -51,6 +60,24 @@ class PageGameHistory extends React.PureComponent {
         this.handleDialogClose()
     }
 
+    handleToggle(value, event) {
+        console.log(value, event)
+        event.stopPropagation()
+        const {checked} = this.state
+        const currentIndex = checked.indexOf(value)
+        const newChecked = [...checked]
+
+        if (currentIndex === -1) {
+            newChecked.push(value)
+        } else {
+            newChecked.splice(currentIndex, 1)
+        }
+
+        this.setState({
+            checked: newChecked,
+        })
+    }
+
     renderGameHistory() {
         return this.props.history.map(game => {
             return this.renderGame(game)
@@ -59,15 +86,21 @@ class PageGameHistory extends React.PureComponent {
 
     renderGame(game) {
         return (
-            <ClickNHold key={game.hash} time={1}
-                        onEnd={this.handleItemPress.bind(this, game.hash)}
-                        onClickNHold={this.handleItemLongPress.bind(this, game.hash)}>
-
-                <ListItem>
-                    <Avatar>{game.players.length}</Avatar>
+            <ListItem key={game.hash}>
+                <LongPress onPress={this.handleItemPress.bind(this, game.hash)}
+                           onLongPress={this.handleItemLongPress.bind(this, game.hash)}>
+                    <ListItemAvatar style={{color: 'red'}}>
+                        <Avatar>{game.players.length}</Avatar>
+                    </ListItemAvatar>
                     <ListItemText primary={game.players.map((player) => player.name).join(', ')}/>
-                </ListItem>
-            </ClickNHold>
+                </LongPress>
+                <ListItemSecondaryAction>
+                    <Checkbox
+                        onChange={this.handleToggle.bind(this, game.hash)}
+                        checked={this.state.checked.indexOf(game.hash) !== -1}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
 
         )
     }
@@ -77,6 +110,7 @@ class PageGameHistory extends React.PureComponent {
         const {open} = this.state
         return (
             <div className={classes.root}>
+
                 <Button variant="contained" className={classes.button}
                         component={Link} to={PAGE_PLAYERS_COUNT}>
                     <Trans i18nKey={'game.action.newGame'}/>

@@ -48,7 +48,6 @@
         "immutable": "^4.0.0-rc.12",
         "lodash": "^4.17.10",
         "react": "^16.8.6",
-        "react-click-n-hold": "^1.0.7",
         "react-dom": "^16.8.6",
         "react-i18next": "^10.8.1",
         "react-redux": "^7.0.2",

@@ -6,12 +6,12 @@ import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles/index'
 import {withTranslation} from 'react-i18next'
 import {Badge, Button, Paper, Typography} from '@material-ui/core'
-import ClickNHold from 'react-click-n-hold'
 
 import {playerHistoryAdd} from '../../reducers/game/actions'
 import PlayerScoreboardHistory from './PlayerScoreboardHistory'
 import ScoreInputDialog from './ScoreInputDialog'
 import {getPlayerKey} from '../../utils/player'
+import LongPress from '../LongPress/LongPress'
 
 const styles = theme => ({
     paper: {
@@ -50,12 +50,14 @@ class PlayerScoreboard extends Component {
         this.saveDelta = this.saveDelta.bind(this)
     }
 
-    changeScore(multiplier, value) {
-        if (this.saveTimeoutId !== null) {
-            window.clearTimeout(this.saveTimeoutId)
-        }
-        this.saveTimeoutId = window.setTimeout(this.saveDelta, this.saveTimeout)
+    componentWillUnmount() {
+        this.clearTimeout()
+        this.saveDelta()
+    }
 
+    changeScore(multiplier, value) {
+        this.clearTimeout()
+        this.saveTimeoutId = window.setTimeout(this.saveDelta, this.saveTimeout)
         this.setState((state) => {
             return {delta: state.delta + multiplier * value}
         })
@@ -67,6 +69,12 @@ class PlayerScoreboard extends Component {
         if (delta !== 0) {
             playerHistoryAdd(delta)
             this.setState({delta: 0})
+        }
+    }
+
+    clearTimeout() {
+        if (this.saveTimeoutId !== null) {
+            window.clearTimeout(this.saveTimeoutId)
         }
     }
 
@@ -130,20 +138,22 @@ class PlayerScoreboard extends Component {
                     </div>
                     <div className={classes.scoreContainer}>
 
-                        <ClickNHold time={1} onClickNHold={this.handleButtonLongPress.bind(this, -1)}
-                                    onEnd={this.handleButtonPress.bind(this, -1)}>
+                        <LongPress onPress={this.handleButtonPress.bind(this, -1)}
+                                   onLongPress={this.handleButtonLongPress.bind(this, -1)}>
                             <Button variant="contained">-</Button>
-                        </ClickNHold>
-                        <ScoreInputDialog open={nagativeModalOpen} title={t('scoreboard.dialog.title.subtract')}
+                        </LongPress>
+                        <ScoreInputDialog open={nagativeModalOpen}
+                                          title={t('scoreboard.dialog.title.subtract')}
                                           onClose={this.handleDialogClose.bind(this, -1)}/>
 
                         {this.renderScoreAndBadge()}
 
-                        <ClickNHold time={1} onClickNHold={this.handleButtonLongPress.bind(this, +1)}
-                                    onEnd={this.handleButtonPress.bind(this, +1)}>
+                        <LongPress onPress={this.handleButtonPress.bind(this, +1)}
+                                   onLongPress={this.handleButtonLongPress.bind(this, +1)}>
                             <Button variant="contained">+</Button>
-                        </ClickNHold>
-                        <ScoreInputDialog open={positiveModalOpen} title={t('scoreboard.dialog.title.add')}
+                        </LongPress>
+                        <ScoreInputDialog open={positiveModalOpen}
+                                          title={t('scoreboard.dialog.title.add')}
                                           onClose={this.handleDialogClose.bind(this, +1)}/>
                     </div>
                 </div>
