@@ -17,10 +17,10 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     formControl: {
-        padding: theme.spacing.unit
+        padding: theme.spacing()
     },
     button: {
-        margin: `${theme.spacing.unit * 2}px auto`
+        margin: `${theme.spacing(2)}px auto`
     },
 })
 

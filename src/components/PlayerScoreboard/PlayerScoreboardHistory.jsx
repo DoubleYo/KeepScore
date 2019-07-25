@@ -10,7 +10,7 @@ import {Dialog, List, ListItem, ListItemText} from '@material-ui/core'
 
 const styles = theme => ({
     history: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(),
         flexBasis: '40px',
         borderLeft: `solid thin ${theme.palette.divider}`
     },

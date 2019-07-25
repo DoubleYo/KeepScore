@@ -29,7 +29,7 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     button: {
-        margin: `${theme.spacing.unit * 2}px auto`
+        margin: `${theme.spacing(2)}px auto`
     },
 })
 

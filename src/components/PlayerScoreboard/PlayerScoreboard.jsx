@@ -15,7 +15,7 @@ import LongPress from '../LongPress/LongPress'
 
 const styles = theme => ({
     paper: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(),
         display: 'flex',
     },
     content: {

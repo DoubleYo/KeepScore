@@ -6,7 +6,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Input} from '
 
 const styles = theme => ({
     input: {
-        margin: `0 ${theme.spacing.unit}px`
+        margin: `0 ${theme.spacing()}px`
     },
 })
 

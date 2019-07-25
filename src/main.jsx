@@ -36,9 +36,7 @@ const theme = createMuiTheme({
             initialWidth: 'lg',
         },
     },
-    typography: {
-        useNextVariants: true,
-    },
+    typography: {},
 })
 
 import Main from './pages/Main'

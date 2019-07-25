@@ -13,7 +13,7 @@ import {getPlayerKey} from '../utils/player'
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing.unit,
+        padding: theme.spacing(),
     },
 })
 
@@ -34,7 +34,7 @@ class PageScoreboard extends Component {
     render() {
         const {classes} = this.props
         return (
-            <Grid container className={classes.root} spacing={8}>
+            <Grid container className={classes.root} spacing={1}>
                 {this.renderPlayersScore()}
             </Grid>
         )

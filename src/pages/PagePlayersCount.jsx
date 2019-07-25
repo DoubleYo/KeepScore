@@ -16,23 +16,23 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        margin: `${theme.spacing.unit}px auto`,
+        margin: `${theme.spacing()}px auto`,
     },
     grid: {
         display: 'flex',
         alignItems: 'center',
         flexWrap: 'wrap',
-        width: (64 + theme.spacing.unit * 2) * 3,
+        width: (64 + theme.spacing(2)) * 3,
     },
     button: {
         width: 64,
         height: 64,
-        padding: theme.spacing.unit,
-        margin: theme.spacing.unit,
+        padding: theme.spacing(),
+        margin: theme.spacing(),
     },
     formControl: {
         minWidth: 120,
-        marginTop: theme.spacing.unit * 2,
+        marginTop: theme.spacing(2),
     },
 })
 
