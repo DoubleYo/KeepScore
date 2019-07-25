@@ -51,8 +51,9 @@ class PlayerScoreboard extends Component {
     }
 
     componentWillUnmount() {
-        this.clearTimeout()
-        this.saveDelta()
+        if(this.clearTimeout()) {
+            this.saveDelta()
+        }
     }
 
     changeScore(multiplier, value) {
@@ -67,15 +68,19 @@ class PlayerScoreboard extends Component {
         const {playerHistoryAdd} = this.props
         const {delta} = this.state
         if (delta !== 0) {
-            playerHistoryAdd(delta)
+            this.clearTimeout()
             this.setState({delta: 0})
+            playerHistoryAdd(delta)
         }
     }
 
     clearTimeout() {
         if (this.saveTimeoutId !== null) {
             window.clearTimeout(this.saveTimeoutId)
+            this.saveTimeoutId = null
+            return true
         }
+        return false
     }
 
     handleButtonPress(multiplier, event, enough) {
