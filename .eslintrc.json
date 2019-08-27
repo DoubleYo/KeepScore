@@ -43,6 +43,7 @@
                     "error"
                 ]
             }
-        ]
+        ],
+        "no-prototype-builtins": "off"
     }
 }

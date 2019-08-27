@@ -6,10 +6,12 @@ import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
-    HISTORY_BACK, PAGE_PLAYERS_COUNT, PAGE_PLAYERS_NAME,
-    PAGE_ROOT, PAGE_SCOREBOARD,
+    HISTORY_BACK,
+    PAGE_PLAYERS_COUNT,
+    PAGE_PLAYERS_NAME,
+    PAGE_ROOT,
+    PAGE_SCOREBOARD,
     PAGE_SETTINGS,
-    PAGE_TITLES,
     PREVIOUS_PAGE
 } from '../reducers/routing'
 

@@ -1,11 +1,9 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
-
-import {PAGE_ROOT} from '../reducers/routing'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
@@ -24,7 +22,6 @@ class MainMoreMenu extends React.PureComponent {
         }
     }
 
-
     handleMoreMenuButtonClick(event) {
         this.setState({moreMenuAnchor: event.currentTarget})
     }
@@ -33,17 +30,21 @@ class MainMoreMenu extends React.PureComponent {
         this.setState({moreMenuAnchor: null})
     }
 
-    render() {
-        const menu = []
+    renderAppBarActionTop() {
+        const {appBarActionTop} = this.props
+        return appBarActionTop.entrySeq().map(([key, value]) => {
+            return (
+                <Fragment key={key}>
+                    {value}
+                </Fragment>
+            )
+        })
+    }
 
-        if (PAGE_ROOT === this.props.pathname) {
-            menu.push({
-                lib: 'TEST',
-                onClick: () => {console.log('TEST')},
-            })
-        }
+    renderAppBarActionMore() {
+        const {appBarActionMore} = this.props
 
-        if (0 === menu.length) {
+        if (appBarActionMore.size === 0) {
             return null
         }
 
@@ -62,14 +63,17 @@ class MainMoreMenu extends React.PureComponent {
                     open={Boolean(this.state.moreMenuAnchor)}
                     onClose={this.handleCloseMoreMenu.bind(this)}>
 
-                    {menu.map((item) => {
-                        return (
-                            <MenuItem key={item.lib} onClick={item.onClick}>{item.lib}</MenuItem>
-                        )
-                    })}
                 </Menu>
             </div>
+        )
+    }
 
+    render() {
+        return (
+            <div>
+                {this.renderAppBarActionTop()}
+                {this.renderAppBarActionMore()}
+            </div>
         )
     }
 }
@@ -78,11 +82,15 @@ MainMoreMenu.propTypes = {
     history: PropTypes.object,
     pathname: PropTypes.string,
     objectsCount: PropTypes.number,
+    appBarActionTop: PropTypes.object,
+    appBarActionMore: PropTypes.object,
 }
 
 function mapStateToProps(state) {
     return {
         pathname: state.router.location.pathname,
+        appBarActionTop: state.appBarAction.top,
+        appBarActionMore: state.appBarAction.more,
     }
 }
 
