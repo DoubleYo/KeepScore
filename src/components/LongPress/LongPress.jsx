@@ -21,8 +21,8 @@ class LongPress extends PureComponent {
         rightClickAsLongPress: PropTypes.bool,
     }
 
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
 
         this.position = null
         this.timeoutId = null
