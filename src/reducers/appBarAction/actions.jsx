@@ -34,9 +34,9 @@ export function deleteAppBarActionMore(key) {
     return deleteAppBarAction(key, APP_BAR_ACTION_POSITION_MORE)
 }
 
-export function deleteAppBarAction(key, posititon) {
+export function deleteAppBarAction(key, position) {
     return function (dispatch) {
-        dispatch({type: APP_BAR_ACTION_DELETE_ACTION, payload: {key, posititon}})
+        dispatch({type: APP_BAR_ACTION_DELETE_ACTION, payload: {key, position}})
     }
 }
 

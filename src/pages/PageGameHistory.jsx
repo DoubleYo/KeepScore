@@ -10,7 +10,8 @@ import {
     Avatar,
     Button,
     Checkbox,
-    Dialog, IconButton,
+    Dialog,
+    IconButton,
     List,
     ListItem,
     ListItemAvatar,
@@ -26,7 +27,7 @@ import {format} from 'date-fns'
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
 import {gameHistoryLoad, gameHistoryRematch, gameHistoryRemove} from '../reducers/game/actions'
 import LongPress from '../components/LongPress/LongPress'
-import {setAppBarActionMain} from '../reducers/appBarAction/actions'
+import {deleteAppBarActionMain, setAppBarActionMain} from '../reducers/appBarAction/actions'
 
 const styles = theme => ({
     root: {
@@ -50,15 +51,17 @@ class PageGameHistory extends PureComponent {
     }
 
     componentDidUpdate() {
-        const {setAppBarActionMain} = this.props
+        const {setAppBarActionMain, deleteAppBarActionMain} = this.props
         const {checked} = this.state
         if (checked.length > 0) {
             const DeleteButton = (
-                <IconButton color="inherit" onClick={this.handleHistoryRemoveChecked.bind(this)} >
-                    <DeleteIcon />
+                <IconButton color="inherit" onClick={this.handleHistoryRemoveChecked.bind(this)}>
+                    <DeleteIcon/>
                 </IconButton>
             )
             setAppBarActionMain('delete', {value: DeleteButton})
+        } else {
+            deleteAppBarActionMain('delete')
         }
     }
 
@@ -80,9 +83,8 @@ class PageGameHistory extends PureComponent {
     }
 
     handleHistoryRemoveChecked() {
-        const {checked} = this.state
-        console.log(checked)
-        // this.props.gameHistoryRemove()
+        // TODO add confirmation
+        this.props.gameHistoryRemove(this.state.checked)
     }
 
     handleHistoryRematch() {
@@ -176,6 +178,7 @@ PageGameHistory.propTypes = {
     gameHistoryRemove: PropTypes.func,
     gameHistoryRematch: PropTypes.func,
     setAppBarActionMain: PropTypes.func,
+    deleteAppBarActionMain: PropTypes.func,
 }
 
 function mapStateToProps(state) {
@@ -190,6 +193,7 @@ function mapDispatchToProps(dispatch) {
         gameHistoryRemove: (hash) => dispatch(gameHistoryRemove(hash)),
         gameHistoryRematch: (hash) => dispatch(gameHistoryRematch(hash)),
         setAppBarActionMain: (key, element) => dispatch(setAppBarActionMain(key, element)),
+        deleteAppBarActionMain: (key, element) => dispatch(deleteAppBarActionMain(key, element)),
     }
 }
 
