@@ -1,6 +1,8 @@
 import history from '../../history'
 import {
-    GAME_HISTORY_LOAD, GAME_HISTORY_REMOVE,
+    GAME_HISTORY_REMATCH,
+    GAME_HISTORY_LOAD,
+    GAME_HISTORY_REMOVE,
     GAME_HISTORY_SAVE,
     GAME_PLAYER_HISTORY_ADD,
     GAME_PLAYER_HISTORY_REMOVE,
@@ -22,6 +24,13 @@ export function gameHistoryRemove(hashes) {
             hashes = [hashes]
         }
         dispatch({type: GAME_HISTORY_REMOVE, payload: hashes})
+        history.push(PAGE_ROOT)
+    }
+}
+
+export function gameHistoryRematch(hash) {
+    return function (dispatch) {
+        dispatch({type: GAME_HISTORY_REMATCH, payload: hash})
         history.push(PAGE_ROOT)
     }
 }

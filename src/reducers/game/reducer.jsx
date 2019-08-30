@@ -1,4 +1,5 @@
 import {
+    GAME_HISTORY_REMATCH,
     GAME_HISTORY_LOAD, GAME_HISTORY_REMOVE,
     GAME_HISTORY_SAVE,
     GAME_PLAYER_HISTORY_ADD,
@@ -13,6 +14,7 @@ const INITIAL_STATE = {
     scoreboard: {
         hash: null,
         created: null,
+        updated: null,
         players: [],
     },
     history: [],
@@ -59,6 +61,26 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                     history.splice(gameIndex, 1)
                 }
             })
+            return {
+                ...state,
+                history,
+            }
+        }
+        case GAME_HISTORY_REMATCH: {
+            const history = [...state.history]
+            const game = history.find((game) => game.hash === action.payload)
+            const newGame = {
+                hash: getHash(),
+                created: Date.now(),
+                updated: Date.now(),
+                players: [],
+            }
+            game.players.forEach((player) => {
+                const newPlayer = {...player}
+                newPlayer.history = []
+                newGame.players.push(newPlayer)
+            })
+            history.push(newGame)
             return {
                 ...state,
                 history,

@@ -5,13 +5,11 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import HomeIcon from '@material-ui/icons/Home'
+import {Grid} from '@material-ui/core'
 
 import PlayerScoreboard from '../components/PlayerScoreboard/PlayerScoreboard'
 import {getPlayerKey} from '../utils/player'
-import {addTopElement} from '../reducers/appBarAction/actions'
+import {setAppBarActionMain} from '../reducers/appBarAction/actions'
 
 const styles = theme => ({
     root: {
@@ -21,19 +19,9 @@ const styles = theme => ({
 })
 
 class PageScoreboard extends Component {
-    componentDidMount() {
-        const home = (
-            <IconButton color="inherit" onClick={() => {
-                console.log('TOTO ' + this.props.players.length)
-            }} >
-                <HomeIcon />
-            </IconButton>
-        )
-        this.props.addTopElement('test', home)
-    }
 
     renderPlayersScore() {
-        const {classes, players} = this.props
+        const {players} = this.props
 
         return players.map(player => {
             return (
@@ -58,7 +46,6 @@ PageScoreboard.propTypes = {
     classes: PropTypes.object,
     players: PropTypes.array,
     updated: PropTypes.number,
-    addTopElement: PropTypes.func,
 }
 
 function mapStateToProps(state) {
@@ -70,7 +57,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addTopElement: (key, value) => dispatch(addTopElement(key, value)),
     }
 }
 

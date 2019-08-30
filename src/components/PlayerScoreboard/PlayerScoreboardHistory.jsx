@@ -6,18 +6,17 @@ import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles/index'
 import {withTranslation} from 'react-i18next'
 import {playerHistoryAdd, playerHistoryRemove} from '../../reducers/game/actions'
-import {Dialog, List, ListItem, ListItemText} from '@material-ui/core'
+import {Dialog, List, ListItem, ListItemText, Typography} from '@material-ui/core'
+import {addSign} from '../../utils/strings'
 
 const styles = theme => ({
     history: {
         margin: theme.spacing(),
         flexBasis: '40px',
-        borderLeft: `solid thin ${theme.palette.divider}`
+        borderLeft: `solid thin ${theme.palette.divider}`,
+        maxHeight: '200px',
+        overflow: 'hidden',
     },
-    dialogTitle: {
-        display: 'flex',
-        justifyContent: 'space-between'
-    }
 })
 
 class PlayerScoreboardHistory extends Component {
@@ -60,8 +59,11 @@ class PlayerScoreboardHistory extends Component {
             <Fragment>
                 <div className={classes.history} onClick={this.handleOpenDialog.bind(this)}>
                     {history.map((history) => {
+                        let color = (history.value >= 0) ? 'primary' : 'error'
                         return (
-                            <div key={history.created}>{history.value}</div>
+                            <Typography key={history.created} align="right" color={color}>
+                                {addSign(history.value)}
+                            </Typography>
                         )
                     })}
                 </div>

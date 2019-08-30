@@ -10,7 +10,7 @@ import {
     Avatar,
     Button,
     Checkbox,
-    Dialog,
+    Dialog, IconButton,
     List,
     ListItem,
     ListItemAvatar,
@@ -18,9 +18,15 @@ import {
     ListItemText
 } from '@material-ui/core'
 
+import DeleteIcon from '@material-ui/icons/Delete'
+
+import {fr} from 'date-fns/locale'
+import {format} from 'date-fns'
+
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
-import {gameHistoryLoad, gameHistoryRemove} from '../reducers/game/actions'
+import {gameHistoryLoad, gameHistoryRematch, gameHistoryRemove} from '../reducers/game/actions'
 import LongPress from '../components/LongPress/LongPress'
+import {setAppBarActionMain} from '../reducers/appBarAction/actions'
 
 const styles = theme => ({
     root: {
@@ -43,6 +49,19 @@ class PageGameHistory extends PureComponent {
         }
     }
 
+    componentDidUpdate() {
+        const {setAppBarActionMain} = this.props
+        const {checked} = this.state
+        if (checked.length > 0) {
+            const DeleteButton = (
+                <IconButton color="inherit" onClick={this.handleHistoryRemoveChecked.bind(this)} >
+                    <DeleteIcon />
+                </IconButton>
+            )
+            setAppBarActionMain('delete', {value: DeleteButton})
+        }
+    }
+
     handleItemPress(hash) {
         this.props.gameHistoryLoad(hash)
     }
@@ -60,8 +79,18 @@ class PageGameHistory extends PureComponent {
         this.handleDialogClose()
     }
 
+    handleHistoryRemoveChecked() {
+        const {checked} = this.state
+        console.log(checked)
+        // this.props.gameHistoryRemove()
+    }
+
+    handleHistoryRematch() {
+        this.props.gameHistoryRematch(this.state.open)
+        this.handleDialogClose()
+    }
+
     handleToggle(value, event) {
-        console.log(value, event)
         event.stopPropagation()
         const {checked} = this.state
         const currentIndex = checked.indexOf(value)
@@ -85,6 +114,9 @@ class PageGameHistory extends PureComponent {
     }
 
     renderGame(game) {
+        const primary = game.players.map((player) => player.name).join(', ')
+        const secondary = format(game.updated, 'PPPp', {locale: fr})
+
         return (
             <ListItem key={game.hash}>
                 <LongPress onPress={this.handleItemPress.bind(this, game.hash)}
@@ -92,7 +124,7 @@ class PageGameHistory extends PureComponent {
                     <ListItemAvatar style={{color: 'red'}}>
                         <Avatar>{game.players.length}</Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={game.players.map((player) => player.name).join(', ')}/>
+                    <ListItemText primary={primary} secondary={secondary}/>
                 </LongPress>
                 <ListItemSecondaryAction>
                     <Checkbox
@@ -125,6 +157,9 @@ class PageGameHistory extends PureComponent {
                         <ListItem button onClick={this.handleHistoryRemove.bind(this)}>
                             <ListItemText primary={t('history.action.remove')}/>
                         </ListItem>
+                        <ListItem button onClick={this.handleHistoryRematch.bind(this)}>
+                            <ListItemText primary={t('history.action.rematch')}/>
+                        </ListItem>
                     </List>
                 </Dialog>
             </div>
@@ -139,6 +174,8 @@ PageGameHistory.propTypes = {
     history: PropTypes.array,
     gameHistoryLoad: PropTypes.func,
     gameHistoryRemove: PropTypes.func,
+    gameHistoryRematch: PropTypes.func,
+    setAppBarActionMain: PropTypes.func,
 }
 
 function mapStateToProps(state) {
@@ -151,6 +188,8 @@ function mapDispatchToProps(dispatch) {
     return {
         gameHistoryLoad: (hash) => dispatch(gameHistoryLoad(hash)),
         gameHistoryRemove: (hash) => dispatch(gameHistoryRemove(hash)),
+        gameHistoryRematch: (hash) => dispatch(gameHistoryRematch(hash)),
+        setAppBarActionMain: (key, element) => dispatch(setAppBarActionMain(key, element)),
     }
 }
 

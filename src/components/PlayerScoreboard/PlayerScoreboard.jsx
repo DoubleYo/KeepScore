@@ -1,17 +1,21 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles/index'
 import {withTranslation} from 'react-i18next'
-import {Badge, Button, Paper, Typography} from '@material-ui/core'
+import {Grid, Button, Paper, Typography, Chip} from '@material-ui/core'
+import DoneIcon from '@material-ui/icons/Done'
+import AddIcon from '@material-ui/icons/Add'
+import RemoveIcon from '@material-ui/icons/Remove'
 
 import {playerHistoryAdd} from '../../reducers/game/actions'
 import PlayerScoreboardHistory from './PlayerScoreboardHistory'
 import ScoreInputDialog from './ScoreInputDialog'
 import {getPlayerKey} from '../../utils/player'
 import LongPress from '../LongPress/LongPress'
+import {addSign} from '../../utils/strings'
 
 const styles = theme => ({
     paper: {
@@ -23,14 +27,6 @@ const styles = theme => ({
     },
     name: {
         textAlign: 'center',
-    },
-    scoreContainer: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    score: {
-        flex: 1,
-        textAlign: 'center'
     },
 })
 
@@ -45,7 +41,7 @@ class PlayerScoreboard extends Component {
             positiveModalOpen: false,
         }
 
-        this.saveTimeout = 2000
+        this.saveTimeout = 10000
         this.saveTimeoutId = null
         this.saveDelta = this.saveDelta.bind(this)
     }
@@ -100,8 +96,8 @@ class PlayerScoreboard extends Component {
         this.setState(newState)
     }
 
-    renderScoreAndBadge() {
-        const {classes, player} = this.props
+    renderScore() {
+        const {player} = this.props
         const {delta} = this.state
 
         let score = 0
@@ -110,24 +106,31 @@ class PlayerScoreboard extends Component {
         })
         score += delta
 
-        if (delta !== 0) {
-            const badgeColor = (delta > 0) ? 'primary' : 'error'
-            return (
-                <Badge color={badgeColor} badgeContent={delta} className={classes.score}>
-                    {this.renderScore(score)}
-                </Badge>
-            )
-        }
-
-        return this.renderScore(score)
-    }
-
-    renderScore(score) {
-        const {classes} = this.props
         return (
-            <Typography variant="h2" className={classes.score}>
+            <Typography variant="h2" align="center">
                 {score}
             </Typography>
+        )
+    }
+
+    renderChip() {
+        const {classes} = this.props
+        const {delta} = this.state
+
+        if (delta === 0) {
+            return null
+        }
+
+        const color = (delta > 0) ? 'primary' : 'secondary'
+
+        return (
+            <Chip
+                label={addSign(delta)}
+                color={color}
+                onDelete={this.saveDelta}
+                className={classes.chip}
+                deleteIcon={<DoneIcon />}
+            />
         )
     }
 
@@ -141,26 +144,37 @@ class PlayerScoreboard extends Component {
                     <div className={classes.name}>
                         <Typography>{player.name}</Typography>
                     </div>
-                    <div className={classes.scoreContainer}>
-
-                        <LongPress onPress={this.handleButtonPress.bind(this, -1)}
-                                   onLongPress={this.handleButtonLongPress.bind(this, -1)}>
-                            <Button variant="contained">-</Button>
-                        </LongPress>
-                        <ScoreInputDialog open={nagativeModalOpen}
-                                          title={t('scoreboard.dialog.title.subtract')}
-                                          onClose={this.handleDialogClose.bind(this, -1)}/>
-
-                        {this.renderScoreAndBadge()}
-
-                        <LongPress onPress={this.handleButtonPress.bind(this, +1)}
-                                   onLongPress={this.handleButtonLongPress.bind(this, +1)}>
-                            <Button variant="contained">+</Button>
-                        </LongPress>
-                        <ScoreInputDialog open={positiveModalOpen}
-                                          title={t('scoreboard.dialog.title.add')}
-                                          onClose={this.handleDialogClose.bind(this, +1)}/>
-                    </div>
+                    <Grid container spacing={1} alignItems="center">
+                        <Grid item xs={1}>
+                            <LongPress onPress={this.handleButtonPress.bind(this, -1)}
+                                       onLongPress={this.handleButtonLongPress.bind(this, -1)}>
+                                <Button variant="contained">
+                                    <RemoveIcon/>
+                                </Button>
+                            </LongPress>
+                            <ScoreInputDialog open={nagativeModalOpen}
+                                              title={t('scoreboard.dialog.title.subtract')}
+                                              onClose={this.handleDialogClose.bind(this, -1)}/>
+                        </Grid>
+                        <Grid item xs={3} />
+                        <Grid item xs={4}>
+                            {this.renderScore()}
+                        </Grid>
+                        <Grid item xs={3}>
+                            {this.renderChip()}
+                        </Grid>
+                        <Grid item xs={1}>
+                            <LongPress onPress={this.handleButtonPress.bind(this, +1)}
+                                       onLongPress={this.handleButtonLongPress.bind(this, +1)}>
+                                <Button variant="contained">
+                                    <AddIcon/>
+                                </Button>
+                            </LongPress>
+                            <ScoreInputDialog open={positiveModalOpen}
+                                              title={t('scoreboard.dialog.title.add')}
+                                              onClose={this.handleDialogClose.bind(this, +1)}/>
+                        </Grid>
+                    </Grid>
                 </div>
                 <PlayerScoreboardHistory key={getPlayerKey(player)} player={player}/>
             </Paper>

@@ -32,6 +32,7 @@ module.exports = {
     history: {
         action: {
             remove: 'Supprimer',
+            rematch: 'Nouvelle partie',
             newGame: 'Nouvelle partie',
         },
     },
