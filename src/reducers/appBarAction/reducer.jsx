@@ -22,7 +22,6 @@ export default function appBarActionReducer(state = INITIAL_STATE, action) {
         }
         case APP_BAR_ACTION_DELETE_ACTION: {
             const {position, key} = action.payload
-            console.log(position, key)
             const list = state[position].delete(key)
             return {...state, [position]: list}
         }
@@ -31,6 +30,10 @@ export default function appBarActionReducer(state = INITIAL_STATE, action) {
                 const list = state[action.payload].clear()
                 return {...state, [action.payload]: list}
             }
+            return INITIAL_STATE
+        }
+
+        case '@@router/LOCATION_CHANGE': {
             return INITIAL_STATE
         }
     }

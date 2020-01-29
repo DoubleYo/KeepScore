@@ -5,8 +5,8 @@ import {withStyles} from '@material-ui/core/styles/index'
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Input} from '@material-ui/core'
 
 const styles = theme => ({
-    input: {
-        margin: `0 ${theme.spacing()}px`
+    button: {
+        margin: theme.spacing(0, 1)
     },
 })
 
@@ -50,21 +50,21 @@ class ScoreInputDialog extends PureComponent {
             <Dialog open={open} onClose={this.onClose.bind(this)}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    <Input type="text" value={delta} className={classes.input}
+                    <Input type="text" value={delta} className={classes.button}
                            onChange={this.onInputChange.bind(this)}/>
-                    <Button variant="contained" className={classes.input}
+                    <Button variant="contained" className={classes.button}
                             onClick={this.changeScore.bind(this, -1, 1)}>
                         -1
                     </Button>
-                    <Button variant="contained" className={classes.input}
+                    <Button variant="contained" className={classes.button}
                             onClick={this.changeScore.bind(this, 1, 1)}>
                         +1
                     </Button>
-                    <Button variant="contained" className={classes.input}
+                    <Button variant="contained" className={classes.button}
                             onClick={this.changeScore.bind(this, 1, 5)}>
                         +5
                     </Button>
-                    <Button variant="contained" className={classes.input}
+                    <Button variant="contained" className={classes.button}
                             onClick={this.changeScore.bind(this, 1, 10)}>
                         +10
                     </Button>

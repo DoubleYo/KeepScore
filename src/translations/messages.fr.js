@@ -5,6 +5,7 @@ module.exports = {
         playersCount: 'Nombres de joueurs',
         playersName: 'Noms des joueurs (optionnel)',
         scoreboard: 'Scoreboard',
+        charts: 'Historique',
     },
     game: {
         action: {
@@ -23,9 +24,9 @@ module.exports = {
             }
         },
         history: {
-            action:{
-                addZero : 'Ajouter zero',
-                removeLast : 'Supprimer la dernière entrée',
+            action: {
+                addZero: 'Ajouter zero',
+                removeLast: 'Supprimer la dernière entrée',
             },
         },
     },

@@ -11,11 +11,10 @@ import {addSign} from '../../utils/strings'
 
 const styles = theme => ({
     history: {
+        flexBasis: '3em',
+        height: '8.4em',
         margin: theme.spacing(),
-        flexBasis: '40px',
         borderLeft: `solid thin ${theme.palette.divider}`,
-        maxHeight: '200px',
-        overflow: 'hidden',
     },
 })
 
@@ -53,13 +52,16 @@ class PlayerScoreboardHistory extends Component {
         const {classes, t, player} = this.props
         const {open} = this.state
 
-        const history = [...player.history].reverse()
+        const history = [...player.history].reverse().slice(0, 6)
 
         return (
             <Fragment>
                 <div className={classes.history} onClick={this.handleOpenDialog.bind(this)}>
                     {history.map((history) => {
                         let color = (history.value >= 0) ? 'primary' : 'error'
+                        if (history.value === 0) {
+                            color = 'textSecondary'
+                        }
                         return (
                             <Typography key={history.created} align="right" color={color}>
                                 {addSign(history.value)}
@@ -104,7 +106,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
     withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(PlayerScoreboardHistory)

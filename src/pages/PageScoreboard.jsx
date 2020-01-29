@@ -2,14 +2,16 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
-import {Grid} from '@material-ui/core'
+import {Grid, IconButton} from '@material-ui/core'
 
 import PlayerScoreboard from '../components/PlayerScoreboard/PlayerScoreboard'
 import {getPlayerKey} from '../utils/player'
 import {setAppBarActionMain} from '../reducers/appBarAction/actions'
+import TimelineIcon from '@material-ui/icons/Timeline'
+import {PAGE_CHARTS} from '../reducers/routing'
 
 const styles = theme => ({
     root: {
@@ -20,12 +22,22 @@ const styles = theme => ({
 
 class PageScoreboard extends Component {
 
+    componentDidMount() {
+        const {setAppBarActionMain} = this.props
+        const ChartButton = (
+            <IconButton color="inherit" component={Link} to={PAGE_CHARTS}>
+                <TimelineIcon/>
+            </IconButton>
+        )
+        setAppBarActionMain('goto-charts', {value: ChartButton})
+    }
+
     renderPlayersScore() {
         const {players} = this.props
 
         return players.map(player => {
             return (
-                <Grid item xs={6} key={getPlayerKey(player)}>
+                <Grid item md={6} xs={12} key={getPlayerKey(player)}>
                     <PlayerScoreboard player={player}/>
                 </Grid>
             )
@@ -46,6 +58,7 @@ PageScoreboard.propTypes = {
     classes: PropTypes.object,
     players: PropTypes.array,
     updated: PropTypes.number,
+    setAppBarActionMain: PropTypes.func,
 }
 
 function mapStateToProps(state) {
@@ -57,11 +70,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        setAppBarActionMain: (key, element) => dispatch(setAppBarActionMain(key, element)),
     }
 }
 
 export default compose(
     withRouter,
-    withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(PageScoreboard)

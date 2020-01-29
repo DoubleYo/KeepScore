@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Fragment, PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
@@ -16,13 +16,14 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemSecondaryAction,
-    ListItemText
+    ListItemText,
+    ListSubheader
 } from '@material-ui/core'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import {fr} from 'date-fns/locale'
-import {format} from 'date-fns'
+import {format, formatDistanceToNow} from 'date-fns'
 
 import {PAGE_PLAYERS_COUNT} from '../reducers/routing'
 import {gameHistoryLoad, gameHistoryRematch, gameHistoryRemove} from '../reducers/game/actions'
@@ -110,8 +111,24 @@ class PageGameHistory extends PureComponent {
     }
 
     renderGameHistory() {
-        return this.props.history.map(game => {
-            return this.renderGame(game)
+        const history = [...this.props.history].reverse()
+
+        const timeRangeHistory = {}
+        history.forEach(game => {
+            const timeRange = formatDistanceToNow(game.updated, {locale: fr})
+            if (!(timeRange in timeRangeHistory)) {
+                timeRangeHistory[timeRange] = []
+            }
+            timeRangeHistory[timeRange].push(game)
+        })
+
+        return Object.entries(timeRangeHistory).map(([timeRange, games]) => {
+            return (
+                <Fragment key={timeRange}>
+                    <ListSubheader>{timeRange}</ListSubheader>
+                    {games.map(game => this.renderGame(game))}
+                </Fragment>
+            )
         })
     }
 
@@ -199,7 +216,7 @@ function mapDispatchToProps(dispatch) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
     withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(PageGameHistory)

@@ -3,7 +3,7 @@ export function getHash(length = 12) {
 }
 export function addSign(value) {
     let number = value
-    if (value >= 0) {
+    if (value >= 0 && value !== 0) {
         number = `+${number}`
     }
     return number

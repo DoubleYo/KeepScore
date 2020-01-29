@@ -1,41 +1,49 @@
-import React from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
+import {Grid} from '@material-ui/core'
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        padding: theme.spacing(),
     },
 })
 
-class PageSettings extends React.PureComponent {
+class PageCharts extends Component {
+
     render() {
+        const {classes} = this.props
         return (
-            <div className={this.props.classes.root}>
-                Settings
-            </div>
+            <Grid container className={classes.root} spacing={1}>
+                Charts
+            </Grid>
         )
     }
 }
 
-PageSettings.propTypes = {
+PageCharts.propTypes = {
     classes: PropTypes.object,
-    gameHistory: PropTypes.array,
+    players: PropTypes.array,
 }
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        players: state.game.scoreboard.players,
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-    return {}
+    return {
+    }
 }
 
 export default compose(
     withRouter,
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
-)(PageSettings)
+)(PageCharts)

@@ -1,7 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 
@@ -62,7 +61,6 @@ const config = {
 module.exports = (env, argv) => {
     if (argv.mode === 'development') {
         config.devtool = 'source-map'
-        // config.plugins.push(new BundleAnalyzerPlugin())
     }
 
     if (argv.mode === 'production') {
@@ -70,12 +68,7 @@ module.exports = (env, argv) => {
             maxEntrypointSize: 512000,
             maxAssetSize: 512000,
         }
-        config.plugins.push(new CleanWebpackPlugin(['dist']))
-        // config.plugins.push(new BundleAnalyzerPlugin({
-        //     analyzerMode: 'static',
-        //     openAnalyzer: false,
-        //     generateStatsFile: true,
-        // }))
+        config.plugins.push(new CleanWebpackPlugin())
     }
 
     return config

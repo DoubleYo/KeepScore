@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
-    HISTORY_BACK,
+    HISTORY_BACK, PAGE_CHARTS,
     PAGE_PLAYERS_COUNT,
     PAGE_PLAYERS_NAME,
     PAGE_ROOT,
@@ -80,6 +80,7 @@ class MainAppBar extends PureComponent {
             [PAGE_PLAYERS_COUNT]: t('title.playersCount'),
             [PAGE_PLAYERS_NAME]: t('title.playersName'),
             [PAGE_SCOREBOARD]: t('title.scoreboard'),
+            [PAGE_CHARTS]: t('title.charts'),
         }
         if (pageTitles.hasOwnProperty(pathname)) {
             return pageTitles[pathname]
@@ -125,7 +126,7 @@ function mapDispatchToProps(dispatch) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
     withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(MainAppBar)

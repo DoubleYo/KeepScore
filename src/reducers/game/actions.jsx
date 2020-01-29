@@ -10,6 +10,7 @@ import {
     GAME_PLAYERS_NAME
 } from './constants'
 import {PAGE_PLAYERS_NAME, PAGE_ROOT, PAGE_SCOREBOARD} from '../routing'
+import {AUTOCOMPLETE_PLAYERS_NAME_SAVE} from '../autocomplete/constants'
 
 export function gameHistoryLoad(hash) {
     return function (dispatch) {
@@ -42,9 +43,10 @@ export function setPlayersCount(count) {
     }
 }
 
-export function setPlayersName(names) {
+export function setPlayersName(players) {
     return function (dispatch) {
-        dispatch({type: GAME_PLAYERS_NAME, payload: names})
+        dispatch({type: AUTOCOMPLETE_PLAYERS_NAME_SAVE, payload: players})
+        dispatch({type: GAME_PLAYERS_NAME, payload: players})
         dispatch({type: GAME_HISTORY_SAVE})
         history.push(PAGE_SCOREBOARD)
     }

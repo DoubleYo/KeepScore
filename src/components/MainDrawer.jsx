@@ -77,6 +77,6 @@ function mapDispatchToProps(dispatch) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(MainDrawer)

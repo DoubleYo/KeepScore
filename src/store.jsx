@@ -17,6 +17,7 @@ const persistConfig = {
     storage: storage,
     whitelist: [
         'game',
+        'autocomplete',
     ]
 }
 const store = createStore(

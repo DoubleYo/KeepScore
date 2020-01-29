@@ -5,10 +5,11 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 
-import {setPlayersName} from '../reducers/game/actions'
-
-import {Button, FormControl, Input, Typography} from '@material-ui/core'
+import {Button, FormControl, Typography, TextField} from '@material-ui/core'
+import {Autocomplete} from '@material-ui/lab'
 import {Trans, withTranslation} from 'react-i18next'
+
+import {setPlayersName} from '../reducers/game/actions'
 
 const styles = theme => ({
     root: {
@@ -37,11 +38,11 @@ class PagePlayersName extends React.PureComponent {
         this.state = {players}
     }
 
-    handleChange(event) {
+    handleChange(event, value) {
         const {players} = this.state
         players.forEach((player, index) => {
             if (player.hash === event.target.name) {
-                players[index].name = event.target.value
+                players[index].name = value
             }
         })
         this.setState({players: [...players]})
@@ -59,15 +60,24 @@ class PagePlayersName extends React.PureComponent {
     }
 
     renderPlayersNameInputs() {
-        const {classes} = this.props
+        const {classes, playersName} = this.props
         const {players} = this.state
 
         return players.map(player => {
-            const value = player.placeholder === player.name ? '' : player.name
+            const renderInput = params => (
+                <TextField {...params} margin="normal" fullWidth={true}
+                           name={player.hash} placeholder={player.placeholder}
+                />
+            )
+
             return (
                 <FormControl key={player.hash} fullWidth className={classes.formControl}>
-                    <Input name={player.hash} placeholder={player.placeholder} value={value}
-                           onChange={this.handleChange.bind(this)}/>
+                    <Autocomplete name={player.hash} options={playersName} freeSolo={true}
+                                  disableOpenOnFocus={true}
+                                  autoComplete={true} autoHighlight={true}
+                                  onChange={this.handleChange.bind(this)}
+                                  onInputChange={this.handleChange.bind(this)}
+                                  renderInput={renderInput}/>
                 </FormControl>
             )
         })
@@ -92,12 +102,14 @@ PagePlayersName.propTypes = {
     classes: PropTypes.object,
     t: PropTypes.func,
     players: PropTypes.array,
+    playersName: PropTypes.array,
     setPlayersName: PropTypes.func,
 }
 
 function mapStateToProps(state) {
     return {
-        players: state.game.scoreboard.players
+        players: state.game.scoreboard.players,
+        playersName: state.autocomplete.playersName,
     }
 }
 
@@ -109,7 +121,7 @@ function mapDispatchToProps(dispatch) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
     withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(PagePlayersName)

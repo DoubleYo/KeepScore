@@ -1,11 +1,11 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles/index'
 import {withTranslation} from 'react-i18next'
-import {Grid, Button, Paper, Typography, Chip} from '@material-ui/core'
+import {Button, Chip, DialogContent, Fab, Grid, Paper, Typography} from '@material-ui/core'
 import DoneIcon from '@material-ui/icons/Done'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
@@ -28,6 +28,17 @@ const styles = theme => ({
     name: {
         textAlign: 'center',
     },
+    buttonContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    extraButtons: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    button: {
+        margin: theme.spacing(0, 1)
+    },
 })
 
 class PlayerScoreboard extends Component {
@@ -47,7 +58,7 @@ class PlayerScoreboard extends Component {
     }
 
     componentWillUnmount() {
-        if(this.clearTimeout()) {
+        if (this.clearTimeout()) {
             this.saveDelta()
         }
     }
@@ -107,7 +118,7 @@ class PlayerScoreboard extends Component {
         score += delta
 
         return (
-            <Typography variant="h2" align="center">
+            <Typography variant="h3" align="center">
                 {score}
             </Typography>
         )
@@ -129,8 +140,27 @@ class PlayerScoreboard extends Component {
                 color={color}
                 onDelete={this.saveDelta}
                 className={classes.chip}
-                deleteIcon={<DoneIcon />}
+                deleteIcon={<DoneIcon/>}
             />
+        )
+    }
+
+    renderBottomButtons() {
+        const {classes, playersCount} = this.props
+
+        if (playersCount > 2) {
+            return null
+        }
+
+        return (
+            <div className={classes.extraButtons}>
+                {[-10, -5, +5, +10].map(delta => (
+                    <Button key={delta} variant="contained" className={classes.button}
+                            onClick={this.handleButtonPress.bind(this, delta)}>
+                        {addSign(delta)}
+                    </Button>
+                ))}
+            </div>
         )
     }
 
@@ -145,7 +175,7 @@ class PlayerScoreboard extends Component {
                         <Typography>{player.name}</Typography>
                     </div>
                     <Grid container spacing={1} alignItems="center">
-                        <Grid item xs={1}>
+                        <Grid item xs={2} className={classes.buttonContainer}>
                             <LongPress onPress={this.handleButtonPress.bind(this, -1)}
                                        onLongPress={this.handleButtonLongPress.bind(this, -1)}>
                                 <Button variant="contained">
@@ -156,14 +186,14 @@ class PlayerScoreboard extends Component {
                                               title={t('scoreboard.dialog.title.subtract')}
                                               onClose={this.handleDialogClose.bind(this, -1)}/>
                         </Grid>
-                        <Grid item xs={3} />
+                        <Grid item xs={2}/>
                         <Grid item xs={4}>
                             {this.renderScore()}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             {this.renderChip()}
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2} className={classes.buttonContainer}>
                             <LongPress onPress={this.handleButtonPress.bind(this, +1)}
                                        onLongPress={this.handleButtonLongPress.bind(this, +1)}>
                                 <Button variant="contained">
@@ -175,6 +205,7 @@ class PlayerScoreboard extends Component {
                                               onClose={this.handleDialogClose.bind(this, +1)}/>
                         </Grid>
                     </Grid>
+                    {this.renderBottomButtons()}
                 </div>
                 <PlayerScoreboardHistory key={getPlayerKey(player)} player={player}/>
             </Paper>
@@ -186,11 +217,14 @@ PlayerScoreboard.propTypes = {
     classes: PropTypes.object,
     t: PropTypes.func,
     player: PropTypes.object.isRequired,
+    playersCount: PropTypes.number,
     playerHistoryAdd: PropTypes.func,
 }
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        playersCount: state.game.scoreboard.players.length
+    }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
@@ -201,7 +235,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 
 export default compose(
     withRouter,
-    withStyles(styles),
     withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(PlayerScoreboard)

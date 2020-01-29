@@ -27,7 +27,7 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
     <Provider store={store}>
-        <PersistGate persistor={persistor}>
+        <PersistGate loading={'Loading...'} persistor={persistor}>
             <ConnectedRouter store={store} history={history}>
                 <MuiThemeProvider theme={theme}>
                     <Main/>
